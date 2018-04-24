@@ -29,11 +29,6 @@ import java.sql.SQLException;
 @EnableTransactionManagement
 public class DataSourceConfig {
 
-    private static Logger logger = LoggerFactory.getLogger(DataSourceConfig.class);
-
-    @Autowired
-    private DataSourceProperties properties;
-
     @Autowired
     private Environment env;
 
@@ -44,26 +39,7 @@ public class DataSourceConfig {
     @Bean
     @Qualifier("dataSource")
     public DataSource dataSource() throws SQLException{
-        logger.info("=======================创建dataSource=================");
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setUrl(properties.getUrl());
-        dataSource.setDriverClassName(properties.getDriverClassName());
-        dataSource.setUsername(properties.getUsername());
-        dataSource.setPassword(properties.getPassword());
-        dataSource.setInitialSize(5);
-        dataSource.setMinIdle(5);
-        dataSource.setMaxActive(100);
-        dataSource.setMaxWait(60000);
-        dataSource.setTimeBetweenEvictionRunsMillis(60000);
-        dataSource.setMinEvictableIdleTimeMillis(300000);
-        dataSource.setValidationQuery("SELECT 'x'");
-        dataSource.setTestWhileIdle(true);
-        dataSource.setTestOnBorrow(false);
-        dataSource.setTestOnReturn(false);
-        dataSource.setPoolPreparedStatements(true);
-        dataSource.setMaxPoolPreparedStatementPerConnectionSize(20);
-        dataSource.setFilters("stat,wall");
-        return dataSource;
+        DataSourceBuilder.create().build();
     }
 
     @Bean
@@ -73,11 +49,5 @@ public class DataSourceConfig {
         fb.setTypeAliasesPackage(env.getProperty("mybatis.type-aliases-package"));
         fb.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/mapper/*Mapper.xml"));
         return fb.getObject();
-    }
-
-
-    @Bean
-    public DataSourceTransactionManager transactionManager(@Qualifier("dataSource") DataSource dataSource) throws Exception {
-        return new DataSourceTransactionManager(dataSource);
     }
 }
