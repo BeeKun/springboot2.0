@@ -1,5 +1,7 @@
 package springboot2.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 业务控制层
  * @author likun
  * @version V1.0
  * @Title: com.lk.springboot2.controller
@@ -23,6 +26,7 @@ public class UserController {
 
     private final UserRepository userRepository;
 
+    private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     public UserController(UserRepository userRepository) {
@@ -34,8 +38,9 @@ public class UserController {
 
     @RequestMapping("/getUser")
     public UserDO getUser() {
+        logger.info("===============进入方法=======================");
         Map<String,Object> reqMap = new HashMap<>();
-        reqMap.put("account","1");
+        reqMap.put("account","2");
         reqMap.put("password","3333");
         UserDO user = userDao.getUser(reqMap);
         return user;
@@ -44,7 +49,6 @@ public class UserController {
     @RequestMapping("/save")
     public User save(String name) {
         User user = new User();
-        System.out.println(1111111);
         user.setName(name);
         userRepository.save(user);
         return user;
