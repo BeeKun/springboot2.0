@@ -3,8 +3,10 @@ package springboot2.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springboot2.listener.UserEvent;
 import springboot2.model.User;
 import springboot2.model.UserDO;
 import springboot2.repository.UserDao;
@@ -23,6 +25,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    @Autowired
+    private ApplicationEventPublisher publisher;
 
     private final UserRepository userRepository;
 
@@ -43,6 +48,7 @@ public class UserController {
         reqMap.put("account","2");
         reqMap.put("password","3333");
         UserDO user = userDao.getUser(reqMap);
+        publisher.publishEvent(new UserEvent(user));
         return user;
     }
 
